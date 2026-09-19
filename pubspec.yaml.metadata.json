@@ -1,0 +1,5 @@
+{
+  "summary": "pubspec.yaml for the Demeter Stage 1 Flutter project. Lists all required dependencies with version constraints compatible with Dart 3 and Flutter 3.x. Includes sqflite, path_provider, record, camera, tflite_flutter, workmanager, dio, and uuid. Also contains the required Android manifest permissions for RECORD_AUDIO and INTERNET, and the WorkManager initializer configuration note.",
+  "updatedAt": "2026-09-18T19:22:00.581579700Z",
+  "userFacing": true
+}

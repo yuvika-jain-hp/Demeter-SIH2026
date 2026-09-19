@@ -1,0 +1,5 @@
+{
+  "summary": "Production-ready SQLite helper for the Demeter Farmer Edge Ingestion module. Implements the micro_lots schema with WAL journal mode, a sync_status index, full CRUD operations including batch-sync transaction, and graceful error handling. Audio blobs are explicitly never stored here.",
+  "updatedAt": "2026-09-18T19:19:50.227475100Z",
+  "userFacing": true
+}

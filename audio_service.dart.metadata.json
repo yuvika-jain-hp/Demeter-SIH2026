@@ -1,0 +1,5 @@
+{
+  "summary": "Audio capture service for Demeter. Uses the `record` package to save voice input directly to the OS filesystem as .ogg (Opus codec). Never encodes to Base64 or stores data in SQLite. Implements session-scoped recording lifecycle with automatic path management via path_provider, and provides the canonical audio file path for insertion into the micro_lots table.",
+  "updatedAt": "2026-09-18T19:20:27.382893400Z",
+  "userFacing": true
+}

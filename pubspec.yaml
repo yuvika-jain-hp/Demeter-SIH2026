@@ -1,0 +1,68 @@
+name: demeter_edge
+description: Demeter – Stage 1 Farmer Edge Ingestion Module (SIH)
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # ── Database ──────────────────────────────────────────────────────────────
+  sqflite: ^2.3.3+1        # SQLite for metadata-only storage (NO audio blobs)
+  path: ^1.9.0             # Path manipulation utilities
+
+  # ── Filesystem ────────────────────────────────────────────────────────────
+  path_provider: ^2.1.3    # getApplicationDocumentsDirectory()
+
+  # ── Audio Capture ─────────────────────────────────────────────────────────
+  record: ^5.1.2           # Microphone → .ogg/Opus file; no Base64
+
+  # ── Vision & Edge AI ──────────────────────────────────────────────────────
+  camera: ^0.11.0+2        # Camera frame access for TFLite input
+  tflite_flutter: ^0.10.4  # On-device inference (Dart 3 compatible)
+
+  # ── Background Sync ───────────────────────────────────────────────────────
+  workmanager: ^0.5.2      # Android JobScheduler wrapper; supports constraints
+
+  # ── Networking ────────────────────────────────────────────────────────────
+  dio: ^5.4.3+1            # Streaming multipart/form-data upload
+
+  # ── Utilities ─────────────────────────────────────────────────────────────
+  uuid: ^4.4.0             # RFC-4122 UUID v4 for MicroLot IDs
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    # Add your TFLite model here when ready:
+    # - assets/grade_model.tflite
+
+# ============================================================================
+# REQUIRED ANDROID CONFIGURATION
+# ============================================================================
+#
+# android/app/src/main/AndroidManifest.xml – add inside <manifest>:
+#
+#   <uses-permission android:name="android.permission.RECORD_AUDIO" />
+#   <uses-permission android:name="android.permission.INTERNET" />
+#   <uses-permission android:name="android.permission.CAMERA" />
+#
+#   <!-- WorkManager initializer (auto-initialise via Jetpack defaults) -->
+#   <!-- No additional manifest entries needed; WorkManager uses default init -->
+#
+# android/app/build.gradle – ensure minSdkVersion >= 21:
+#   defaultConfig {
+#     minSdkVersion 21
+#     targetSdkVersion 34
+#   }
+#
+# For tflite_flutter, add the TFLite AAR dependency in build.gradle:
+#   implementation 'org.tensorflow:tensorflow-lite:2.14.0'
+#   implementation 'org.tensorflow:tensorflow-lite-gpu:2.14.0'  // optional GPU delegate

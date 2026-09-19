@@ -1,0 +1,5 @@
+{
+  "summary": "main.dart bootstrap snippet for Demeter. Initialises WorkManager with the callbackDispatcher before runApp(). Registers a periodic sync task constrained to network connectivity, so Android's JobScheduler only wakes the worker when the device is online. Includes the TFLite grade service placeholder stub.",
+  "updatedAt": "2026-09-18T19:21:40.478689700Z",
+  "userFacing": true
+}

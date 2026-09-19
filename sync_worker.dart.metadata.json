@@ -1,0 +1,5 @@
+{
+  "summary": "WorkManager background sync worker and Dio multipart upload client for Demeter. The top-level callbackDispatcher is registered with WorkManager and runs in a separate Dart isolate. It queries SQLite for pending lots, streams each .ogg file as multipart/form-data via Dio to the backend, and on HTTP 200/201 marks the row as synced (or failed). Includes per-file retry logic, connectivity-gating, and full exception handling so a single bad file never blocks the rest of the queue.",
+  "updatedAt": "2026-09-18T19:21:08.838419700Z",
+  "userFacing": true
+}
