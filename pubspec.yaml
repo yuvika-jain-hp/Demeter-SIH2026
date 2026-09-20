@@ -1,0 +1,29 @@
+name: demeter_vle_hub
+description: Demeter Platform — Stage 2 VLE Hub. BLE scale + AgriStack + Wi-Fi Direct offline tunnel.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # BLE hardware integration
+  flutter_blue_plus: ^1.35.0
+
+  # Nearby Connections (Wi-Fi Direct fallback)
+  nearby_connections: ^4.0.0
+
+  # HTTP networking
+  dio: ^5.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
