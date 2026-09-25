@@ -33,20 +33,75 @@ class DemeterHomePage extends StatefulWidget {
 
 class _DemeterHomePageState extends State<DemeterHomePage> {
   final _agriIdController = TextEditingController();
-  final _weightController = TextEditingController();
+  final _grossWeightController = TextEditingController();
+  final _bagCountController = TextEditingController();
   final _moistureController = TextEditingController();
 
   String _commodity = 'WHEAT';
+
+  double _tareWeight = 0;
+  double _netWeight = 0;
   String _result = '';
+
+  void _calculateWeight() {
+    final grossWeight =
+        double.tryParse(_grossWeightController.text.trim());
+
+    final bagCount =
+        int.tryParse(_bagCountController.text.trim());
+
+    if (grossWeight == null || bagCount == null) {
+      setState(() {
+        _result = 'Please enter a valid gross weight and bag count.';
+        _tareWeight = 0;
+        _netWeight = 0;
+      });
+      return;
+    }
+
+    if (grossWeight < 0 || bagCount < 0) {
+      setState(() {
+        _result = 'Weight and bag count cannot be negative.';
+        _tareWeight = 0;
+        _netWeight = 0;
+      });
+      return;
+    }
+
+    // Demeter workflow:
+    // Each bag contributes 1.2 kg of tare.
+    final tare = bagCount * 1.2;
+    final net = grossWeight - tare;
+
+    setState(() {
+      _tareWeight = tare;
+      _netWeight = net < 0 ? 0 : net;
+      _result = '';
+    });
+  }
 
   Future<void> _verifyFarmer() async {
     final agriId = _agriIdController.text.trim();
-    final weight = double.tryParse(_weightController.text.trim());
-    final moisture = double.tryParse(_moistureController.text.trim());
+    final moisture =
+        double.tryParse(_moistureController.text.trim());
 
-    if (agriId.isEmpty || weight == null || moisture == null) {
+    if (agriId.isEmpty) {
       setState(() {
-        _result = 'Please enter all details correctly.';
+        _result = 'Please enter the AgriStack ID.';
+      });
+      return;
+    }
+
+    if (_netWeight <= 0) {
+      setState(() {
+        _result = 'Please calculate the net weight first.';
+      });
+      return;
+    }
+
+    if (moisture == null) {
+      setState(() {
+        _result = 'Please enter a valid moisture percentage.';
       });
       return;
     }
@@ -56,18 +111,22 @@ class _DemeterHomePageState extends State<DemeterHomePage> {
 
       final request = FarmerVerificationRequest(
         agriId: agriId,
-        netWeightKg: weight,
+        netWeightKg: _netWeight,
         moisturePercent: moisture,
         commodityCode: _commodity,
       );
 
       final response = await service.verifyFarmerProduce(request);
 
+      final payout = response.mspRatePerKg * _netWeight;
+
       setState(() {
         _result =
             'Farmer: ${response.farmerName}\n'
             'Status: ${response.approved ? "APPROVED" : "DENIED"}\n'
-            'MSP: ₹${response.mspRatePerKg}/kg\n'
+            'Net Weight: ${_netWeight.toStringAsFixed(2)} kg\n'
+            'MSP: ₹${response.mspRatePerKg.toStringAsFixed(2)}/kg\n'
+            'Estimated Payout: ₹${payout.toStringAsFixed(2)}\n'
             'Transaction: ${response.transactionRef}\n\n'
             '${response.message}';
       });
@@ -81,7 +140,8 @@ class _DemeterHomePageState extends State<DemeterHomePage> {
   @override
   void dispose() {
     _agriIdController.dispose();
-    _weightController.dispose();
+    _grossWeightController.dispose();
+    _bagCountController.dispose();
     _moistureController.dispose();
     super.dispose();
   }
@@ -95,36 +155,45 @@ class _DemeterHomePageState extends State<DemeterHomePage> {
       ),
       body: Center(
         child: SizedBox(
-          width: 500,
+          width: 550,
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text(
-                  'Farmer Verification',
+                  'VLE Hub',
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
 
+                const SizedBox(height: 8),
+
+                const Text(
+                  'Farmer Verification & Weighing',
+                  textAlign: TextAlign.center,
+                ),
+
                 const SizedBox(height: 30),
 
+                // Farmer ID
                 TextField(
                   controller: _agriIdController,
                   decoration: const InputDecoration(
                     labelText: 'AgriStack ID',
-                    hintText: 'AGRI-ID-XXXX',
+                    hintText: 'AGRI-ID-A123',
                     border: OutlineInputBorder(),
                   ),
                 ),
 
                 const SizedBox(height: 16),
 
+                // Commodity
                 DropdownButtonFormField<String>(
-                  value: _commodity,
+                  initialValue: _commodity,
                   decoration: const InputDecoration(
                     labelText: 'Commodity',
                     border: OutlineInputBorder(),
@@ -162,35 +231,125 @@ class _DemeterHomePageState extends State<DemeterHomePage> {
 
                 const SizedBox(height: 16),
 
+                // Gross weight
                 TextField(
-                  controller: _weightController,
-                  keyboardType: TextInputType.number,
+                  controller: _grossWeightController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   decoration: const InputDecoration(
-                    labelText: 'Net Weight (kg)',
+                    labelText: 'Gross Weight (kg)',
+                    hintText: 'Example: 105',
                     border: OutlineInputBorder(),
                   ),
                 ),
 
                 const SizedBox(height: 16),
 
+                // Bag count
                 TextField(
-                  controller: _moistureController,
+                  controller: _bagCountController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
+                    labelText: 'Number of Bags',
+                    hintText: 'Example: 5',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Moisture
+                TextField(
+                  controller: _moistureController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: const InputDecoration(
                     labelText: 'Moisture (%)',
+                    hintText: 'Example: 12',
                     border: OutlineInputBorder(),
                   ),
                 ),
 
                 const SizedBox(height: 24),
 
+                ElevatedButton.icon(
+                  onPressed: _calculateWeight,
+                  icon: const Icon(Icons.scale),
+                  label: const Padding(
+                    padding: EdgeInsets.all(14),
+                    child: Text(
+                      'Calculate Net Weight',
+                      style: TextStyle(fontSize: 17),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Weight calculation result
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Weight Summary',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Tare Weight'),
+                            Text(
+                              '${_tareWeight.toStringAsFixed(2)} kg',
+                            ),
+                          ],
+                        ),
+
+                        const Divider(),
+
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Net Weight',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              '${_netWeight.toStringAsFixed(2)} kg',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
                 ElevatedButton(
                   onPressed: _verifyFarmer,
                   child: const Padding(
                     padding: EdgeInsets.all(14),
                     child: Text(
-                      'Verify Farmer',
-                      style: TextStyle(fontSize: 18),
+                      'Verify Farmer & Calculate Payout',
+                      style: TextStyle(fontSize: 17),
                     ),
                   ),
                 ),
