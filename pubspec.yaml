@@ -18,6 +18,7 @@ dependencies:
 
   # HTTP networking
   dio: ^5.7.0
+  permission_handler: ^13.0.2
 
 dev_dependencies:
   flutter_test:

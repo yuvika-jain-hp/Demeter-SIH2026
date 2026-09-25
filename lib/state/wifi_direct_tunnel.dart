@@ -23,12 +23,15 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:nearby_connections/nearby_connections.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // ---------------------------------------------------------------------------
 // Domain model — tunnel lifecycle events
 // ---------------------------------------------------------------------------
 
-sealed class TunnelEvent {}
+sealed class TunnelEvent {
+  const TunnelEvent();
+}
 
 final class TunnelAdvertising extends TunnelEvent {
   const TunnelAdvertising(this.serviceId);
@@ -289,15 +292,23 @@ final class WifiDirectTunnel {
   // Permissions
   // -------------------------------------------------------------------------
 
-  Future<bool> _checkPermissions() async {
-    try {
-      final location = await _nearby.checkLocationPermission();
-      final bluetooth = await _nearby.checkBluetoothPermission();
-      return location && bluetooth;
-    } catch (_) {
-      return false;
-    }
+Future<bool> _checkPermissions() async {
+  try {
+    final location = await Permission.location.request();
+
+    final bluetooth = await Future.wait([
+      Permission.bluetooth.request(),
+      Permission.bluetoothAdvertise.request(),
+      Permission.bluetoothConnect.request(),
+      Permission.bluetoothScan.request(),
+    ]);
+
+    return location.isGranted &&
+        bluetooth.every((permission) => permission.isGranted);
+  } catch (_) {
+    return false;
   }
+}
 
   // -------------------------------------------------------------------------
   // Dispose
