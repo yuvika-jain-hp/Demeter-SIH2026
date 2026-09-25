@@ -248,6 +248,12 @@
       "languageVersion": "3.8"
     },
     {
+      "name": "platform",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/platform-3.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
+    },
+    {
       "name": "plugin_platform_interface",
       "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
       "packageUri": "lib/",
@@ -272,6 +278,36 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "sqflite",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/sqflite-2.4.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.12"
+    },
+    {
+      "name": "sqflite_android",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/sqflite_android-2.4.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.12"
+    },
+    {
+      "name": "sqflite_common",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/sqflite_common-2.5.13",
+      "packageUri": "lib/",
+      "languageVersion": "3.12"
+    },
+    {
+      "name": "sqflite_darwin",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/sqflite_darwin-2.4.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.12"
+    },
+    {
+      "name": "sqflite_platform_interface",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/sqflite_platform_interface-2.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.12"
+    },
+    {
       "name": "stack_trace",
       "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/stack_trace-1.12.2",
       "packageUri": "lib/",
@@ -288,6 +324,12 @@
       "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/string_scanner-1.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.1"
+    },
+    {
+      "name": "synchronized",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/synchronized-3.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.12"
     },
     {
       "name": "term_glyph",
@@ -324,6 +366,42 @@
       "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/web-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "workmanager",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/workmanager-0.10.10",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "workmanager_android",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/workmanager_android-0.10.9",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "workmanager_apple",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/workmanager_apple-0.9.11",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "workmanager_linux",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/workmanager_linux-0.1.1+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "workmanager_platform_interface",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/workmanager_platform_interface-0.10.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "workmanager_web",
+      "rootUri": "file:///Users/kunalsuchlani/.pub-cache/hosted/pub.dev/workmanager_web-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
     },
     {
       "name": "xml",
