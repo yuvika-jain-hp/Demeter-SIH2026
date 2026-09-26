@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AlertTriangle, CheckCircle, Clock, Shield, Star, FileText, ArrowRight, Package, Box } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
 import Card from '../components/Card';
@@ -13,6 +13,9 @@ const gradeColor = {
 };
 
 export default function QualityAssessment() {
+  const location = useLocation();
+  const role = location.state?.role || 'farmer';
+  
   const [selectedReportId, setSelectedReportId] = useState(mockQualityReports[0].id);
   const [reports, setReports] = useState(mockQualityReports);
 
@@ -40,7 +43,7 @@ export default function QualityAssessment() {
   };
 
   return (
-    <DashboardLayout role="farmer">
+    <DashboardLayout role={role}>
       <div className="mb-7">
         <h1 className="text-2xl font-bold text-[#1C1C1E]">Quality Reports</h1>
         <p className="text-sm text-[#6B7280] mt-1">Review AI-assisted produce assessments and verified quality reports.</p>
@@ -233,7 +236,7 @@ export default function QualityAssessment() {
                 <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D1D5DB] text-sm font-medium text-[#1C1C1E] rounded hover:bg-gray-50 transition-colors shadow-sm">
                   <FileText size={16} /> Download Report
                 </button>
-                <Link to="/farmer" className="inline-flex items-center gap-2 px-4 py-2 bg-[#1B4332] text-sm font-medium text-white rounded hover:bg-[#2D6A4F] transition-colors">
+                <Link to={`/${role}`} className="inline-flex items-center gap-2 px-4 py-2 bg-[#1B4332] text-sm font-medium text-white rounded hover:bg-[#2D6A4F] transition-colors">
                   Back to Dashboard
                 </Link>
               </div>

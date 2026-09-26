@@ -4,6 +4,7 @@ import FarmerDashboard from './pages/FarmerDashboard';
 import AddProduce from './pages/AddProduce';
 import BuyerDashboard from './pages/BuyerDashboard';
 import CreateRequirement from './pages/CreateRequirement';
+import BuyerHelp from './pages/BuyerHelp';
 import OrderMatching from './pages/OrderMatching';
 import NegotiationPage from './pages/NegotiationPage';
 import QualityAssessment from './pages/QualityAssessment';
@@ -12,6 +13,7 @@ import Logistics from './pages/Logistics';
 import DemandForecasting from './pages/DemandForecasting';
 import CropLossHelp from './pages/CropLossHelp';
 import TrackReport from './pages/TrackReport';
+import RoleSelection from './pages/RoleSelection';
 
 export default function App() {
   return (
@@ -19,6 +21,7 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<RoleSelection />} />
 
         {/* Farmer Portal */}
         <Route path="/farmer" element={<FarmerDashboard />} />
@@ -29,6 +32,7 @@ export default function App() {
         {/* Buyer Portal */}
         <Route path="/buyer" element={<BuyerDashboard />} />
         <Route path="/buyer/create-requirement" element={<CreateRequirement />} />
+        <Route path="/buyer/help" element={<BuyerHelp />} />
 
         {/* Shared operational pages */}
         <Route path="/matching" element={<OrderMatching />} />

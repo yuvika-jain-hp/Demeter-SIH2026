@@ -12,16 +12,16 @@ const farmerNav = [
   { label: 'Negotiations', to: '/negotiation', icon: MessageSquare },
   { label: 'Quality Reports', to: '/quality', icon: Award },
   { label: 'Logistics', to: '/logistics', icon: Truck },
-  { label: 'Crop Loss & Help', to: '/farmer/help', icon: ShieldAlert },
+  { label: 'Harvest & Crop Loss', to: '/farmer/help', icon: ShieldAlert },
 ];
 
 const buyerNav = [
   { label: 'Dashboard', to: '/buyer', icon: LayoutDashboard },
   { label: 'Requirements', to: '/buyer/create-requirement', icon: ShoppingCart },
   { label: 'Matching', to: '/matching', icon: GitMerge },
-  { label: 'Aggregation', to: '/aggregation', icon: Layers },
-  { label: 'Logistics', to: '/logistics', icon: Truck },
-  { label: 'Demand Forecast', to: '/forecasting', icon: TrendingUp },
+  { label: 'Orders / Procurement', to: '/matching', icon: Package },
+  { label: 'Quality Reports', to: '/quality', icon: Award },
+  { label: 'Help & Support', to: '/buyer/help', icon: ShieldAlert },
 ];
 
 export default function Sidebar({ role = 'farmer' }) {
@@ -54,6 +54,7 @@ export default function Sidebar({ role = 'farmer' }) {
             <Link
               key={to}
               to={to}
+              state={{ role }}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 isActive
                   ? 'bg-white/15 text-white'
@@ -94,7 +95,7 @@ export default function Sidebar({ role = 'farmer' }) {
           </div>
           <LogOut size={14} className="text-white/40 flex-shrink-0" />
         </div>
-        <Link to="/" className="mt-1 flex items-center gap-2 px-3 py-1.5 text-xs text-white/40 hover:text-white/70 transition-colors rounded-lg">
+        <Link to="/login" className="mt-1 flex items-center gap-2 px-3 py-1.5 text-xs text-white/40 hover:text-white/70 transition-colors rounded-lg">
           ← Switch Role
         </Link>
       </div>

@@ -19,17 +19,13 @@ export default function Landing() {
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-[#6B7280]">
             <a href="#how-it-works" className="hover:text-[#1B4332] transition-colors">How It Works</a>
             <a href="#benefits" className="hover:text-[#1B4332] transition-colors">Platform Benefits</a>
-            <Link to="/farmer" className="hover:text-[#1B4332] transition-colors">For Farmers</Link>
-            <Link to="/buyer" className="hover:text-[#1B4332] transition-colors">For Buyers</Link>
-            <Link to="/farmer/help" className="text-amber-800 font-semibold hover:text-amber-900 transition-colors flex items-center gap-1">
-              🌾 Crop Loss Help
-            </Link>
+            <a href="#impact" className="hover:text-[#1B4332] transition-colors">Produce Management & Impact</a>
           </nav>
           <div className="flex items-center gap-4">
-            <Link to="/farmer" className="hidden sm:inline-block text-sm font-semibold text-[#1C1C1E] hover:text-[#1B4332]">
+            <Link to="/login" className="hidden sm:inline-block text-sm font-semibold text-[#1C1C1E] hover:text-[#1B4332]">
               Sign In
             </Link>
-            <Link to="/farmer" className="inline-flex items-center gap-2 bg-[#1B4332] text-white text-sm font-semibold px-5 py-2.5 rounded hover:bg-[#2D6A4F] transition-colors">
+            <Link to="/login" className="inline-flex items-center gap-2 bg-[#1B4332] text-white text-sm font-semibold px-5 py-2.5 rounded hover:bg-[#2D6A4F] transition-colors">
               Get Started <ArrowRight size={16} />
             </Link>
           </div>
@@ -41,19 +37,22 @@ export default function Landing() {
         {/* Left: Content */}
         <div className="flex-1 flex items-center justify-center p-8 lg:p-16 xl:p-24 bg-[#FAFAF7] relative z-10">
           <div className="max-w-xl w-full">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1B4332]/10 text-[#1B4332] text-xs font-semibold mb-4">
+              <span>SIH26193 · Agriculture Produce Management</span>
+            </div>
             <h1 className="text-5xl lg:text-[4rem] font-bold text-[#1B4332] leading-[1.1] tracking-tight mb-6">
               Connecting Farmers to Bulk Demand.
             </h1>
             <p className="text-lg lg:text-xl text-[#6B7280] leading-relaxed mb-10 max-w-md">
-              An AI-driven farmer-to-bulk-buyer supply chain platform.
+              An AI-driven agricultural produce management and supply-chain platform linking fragmented harvests with organized bulk procurement.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                to="/farmer"
+                to="/login"
                 className="inline-flex items-center justify-center gap-2 bg-[#1B4332] text-white font-semibold px-8 py-4 rounded hover:bg-[#2D6A4F] transition-colors text-base"
               >
-                Explore DEMETER
+                Access Platform
                 <ArrowRight size={18} />
               </Link>
             </div>
@@ -90,18 +89,18 @@ export default function Landing() {
       <section id="benefits" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold text-[#1B4332] mb-4">A unified bulk procurement platform</h2>
+            <h2 className="text-3xl font-bold text-[#1B4332] mb-4">Enhancing Agriculture Produce Management</h2>
             <p className="text-lg text-[#6B7280] leading-relaxed">
-              DEMETER reduces reliance on intermediary layers by bridging the gap between local farmer supply and institutional bulk demand.
+              DEMETER manages agricultural produce from harvest to bulk procurement, matching farm supply with verified institutional demand to minimize produce wastage and maximize crop utilization.
             </p>
           </div>
 
           <div className="grid md:grid-cols-4 gap-x-8 gap-y-12">
             {[
-              { icon: Users, t: 'Direct Connections', d: 'Link bulk buyers directly to verified farmer cooperatives.' },
-              { icon: ShieldCheck, t: 'Quality Transparency', d: 'Standardized grading with independent physical inspections.' },
-              { icon: Truck, t: 'Aggregated Logistics', d: 'Pooled harvests and optimized regional collection routes.' },
-              { icon: TrendingUp, t: 'Demand Visibility', d: 'Predictive forecasting for better planting and procurement.' },
+              { icon: Users, t: 'Bulk Demand Matching', d: 'Connect fragmented farm produce directly with verified institutional buyers and processors.' },
+              { icon: ShieldCheck, t: 'Quality Grading & Best-Use', d: 'AI-assisted screening and physical verification to channel produce to retail or processing.' },
+              { icon: Truck, t: 'Aggregated Logistics', d: 'Pooled multi-farmer harvests and coordinated collection routes to cut transit losses.' },
+              { icon: TrendingUp, t: 'Demand Visibility', d: 'Forecasting crop requirements to guide planting, harvest timing, and bulk procurement.' },
             ].map(({ icon: Icon, t, d }) => (
               <div key={t} className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-[#FAFAF7] border border-[#E5E7E0] flex items-center justify-center mb-5">
@@ -111,6 +110,50 @@ export default function Landing() {
                 <p className="text-sm text-[#6B7280] leading-relaxed">{d}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Produce Management & Utilization (Impact) ─────────────── */}
+      <section id="impact" className="py-20 bg-[#F3F4F0] border-t border-[#E5E7E0]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h2 className="text-3xl font-bold text-[#1B4332] mb-3">Intelligent Produce Utilization & Grading</h2>
+            <p className="text-base text-[#6B7280]">
+              Every harvest has value. DEMETER ensures every grade of agricultural produce finds its optimal use case, reducing post-harvest wastage.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-xl p-6 border border-[#E5E7E0] shadow-sm">
+              <div className="inline-block px-2.5 py-1 rounded bg-emerald-50 text-emerald-800 text-xs font-bold mb-3 border border-emerald-200">
+                Grade A Produce
+              </div>
+              <h3 className="text-lg font-bold text-[#1C1C1E] mb-2">Organized Retail & Export</h3>
+              <p className="text-sm text-[#6B7280] leading-relaxed">
+                Premium quality crops meeting top cosmetic and size standards routed to supermarkets, modern trade, and export partners.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 border border-[#E5E7E0] shadow-sm">
+              <div className="inline-block px-2.5 py-1 rounded bg-amber-50 text-amber-800 text-xs font-bold mb-3 border border-amber-200">
+                Grade B Produce
+              </div>
+              <h3 className="text-lg font-bold text-[#1C1C1E] mb-2">Institutional & Hospitality</h3>
+              <p className="text-sm text-[#6B7280] leading-relaxed">
+                Fresh, safe crops with minor cosmetic variations channeled efficiently to hotels, restaurants, caterers, and institutional kitchens.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 border border-[#E5E7E0] shadow-sm">
+              <div className="inline-block px-2.5 py-1 rounded bg-orange-50 text-orange-800 text-xs font-bold mb-3 border border-orange-200">
+                Grade C / Processing
+              </div>
+              <h3 className="text-lg font-bold text-[#1C1C1E] mb-2">Food Processing & Value Addition</h3>
+              <p className="text-sm text-[#6B7280] leading-relaxed">
+                Ripe or irregular produce utilized for pulp, purées, concentrates, sauces, and drying rather than rotting or going to waste.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -203,13 +246,13 @@ export default function Landing() {
             Join the platform connecting the region's top farmers with institutional bulk buyers.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/farmer" className="inline-flex items-center justify-center gap-2 bg-[#FAFAF7] text-[#1B4332] font-semibold px-8 py-4 rounded hover:bg-white transition-colors">
+            <Link to="/login" className="inline-flex items-center justify-center gap-2 bg-[#FAFAF7] text-[#1B4332] font-semibold px-8 py-4 rounded hover:bg-white transition-colors">
               <Leaf size={18} />
-              Join as Farmer / FPO
+              Continue as Farmer / FPO
             </Link>
-            <Link to="/buyer" className="inline-flex items-center justify-center gap-2 bg-[#1B4332] border border-[#7CA982] text-white font-semibold px-8 py-4 rounded hover:bg-[#2D6A4F] transition-colors">
+            <Link to="/login" className="inline-flex items-center justify-center gap-2 bg-[#1B4332] border border-[#7CA982] text-white font-semibold px-8 py-4 rounded hover:bg-[#2D6A4F] transition-colors">
               <Package size={18} />
-              Join as Bulk Buyer
+              Continue as Bulk Buyer
             </Link>
           </div>
         </div>
