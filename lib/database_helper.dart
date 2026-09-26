@@ -18,11 +18,21 @@ extension SyncStatusX on SyncStatus {
 }
 
 class MicroLot {
-  final String id;          // UUID v4
-  final String audioFilePath; // absolute OS path – never a blob
-  final String tfliteGradeHint; // 'A' | 'B' | 'C' | 'UNKNOWN'
-  final int timestamp;      // epoch-ms at capture time
+  final String id;
+  final String audioFilePath;
+  final String tfliteGradeHint;
+  final int timestamp;
   final SyncStatus syncStatus;
+
+  // Stage 2 VLE Hub data
+  final String? farmerId;
+  final String? commodity;
+  final double? grossWeightKg;
+  final int? bagCount;
+  final double? tareWeightKg;
+  final double? netWeightKg;
+  final double? moisturePercent;
+  final String? verifiedGrade;
 
   const MicroLot({
     required this.id,
@@ -30,6 +40,15 @@ class MicroLot {
     required this.tfliteGradeHint,
     required this.timestamp,
     this.syncStatus = SyncStatus.pending,
+
+    this.farmerId,
+    this.commodity,
+    this.grossWeightKg,
+    this.bagCount,
+    this.tareWeightKg,
+    this.netWeightKg,
+    this.moisturePercent,
+    this.verifiedGrade,
   });
 
   Map<String, Object?> toMap() => {
@@ -38,6 +57,15 @@ class MicroLot {
         'tflite_grade_hint': tfliteGradeHint,
         'timestamp': timestamp,
         'sync_status': syncStatus.code,
+
+        'farmer_id': farmerId,
+        'commodity': commodity,
+        'gross_weight_kg': grossWeightKg,
+        'bag_count': bagCount,
+        'tare_weight_kg': tareWeightKg,
+        'net_weight_kg': netWeightKg,
+        'moisture_percent': moisturePercent,
+        'verified_grade': verifiedGrade,
       };
 
   factory MicroLot.fromMap(Map<String, Object?> m) => MicroLot(
@@ -46,14 +74,43 @@ class MicroLot {
         tfliteGradeHint: m['tflite_grade_hint'] as String,
         timestamp: m['timestamp'] as int,
         syncStatus: SyncStatus.values[m['sync_status'] as int],
+
+        farmerId: m['farmer_id'] as String?,
+        commodity: m['commodity'] as String?,
+        grossWeightKg: (m['gross_weight_kg'] as num?)?.toDouble(),
+        bagCount: m['bag_count'] as int?,
+        tareWeightKg: (m['tare_weight_kg'] as num?)?.toDouble(),
+        netWeightKg: (m['net_weight_kg'] as num?)?.toDouble(),
+        moisturePercent: (m['moisture_percent'] as num?)?.toDouble(),
+        verifiedGrade: m['verified_grade'] as String?,
       );
 
-  MicroLot copyWith({SyncStatus? syncStatus}) => MicroLot(
+  MicroLot copyWith({
+    SyncStatus? syncStatus,
+    String? farmerId,
+    String? commodity,
+    double? grossWeightKg,
+    int? bagCount,
+    double? tareWeightKg,
+    double? netWeightKg,
+    double? moisturePercent,
+    String? verifiedGrade,
+  }) =>
+      MicroLot(
         id: id,
         audioFilePath: audioFilePath,
         tfliteGradeHint: tfliteGradeHint,
         timestamp: timestamp,
         syncStatus: syncStatus ?? this.syncStatus,
+
+        farmerId: farmerId ?? this.farmerId,
+        commodity: commodity ?? this.commodity,
+        grossWeightKg: grossWeightKg ?? this.grossWeightKg,
+        bagCount: bagCount ?? this.bagCount,
+        tareWeightKg: tareWeightKg ?? this.tareWeightKg,
+        netWeightKg: netWeightKg ?? this.netWeightKg,
+        moisturePercent: moisturePercent ?? this.moisturePercent,
+        verifiedGrade: verifiedGrade ?? this.verifiedGrade,
       );
 }
 
@@ -66,7 +123,7 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._();
 
   static const _kDbName = 'demeter_edge.db';
-  static const _kDbVersion = 1;
+  static const _kDbVersion = 3;
   static const _kTable = 'micro_lots';
 
   // sqflite serialises all writes on a single background isolate – safe.
@@ -91,30 +148,63 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS $_kTable (
-        id                TEXT PRIMARY KEY NOT NULL,
-        audio_file_path   TEXT NOT NULL,
-        tflite_grade_hint TEXT NOT NULL DEFAULT 'UNKNOWN',
-        timestamp         INTEGER NOT NULL,
-        sync_status       INTEGER NOT NULL DEFAULT 0
-      );
-    ''');
+Future<void> _onCreate(Database db, int version) async {
+  await db.execute('''
+    CREATE TABLE IF NOT EXISTS $_kTable (
+      id                TEXT PRIMARY KEY NOT NULL,
+      audio_file_path   TEXT NOT NULL,
+      tflite_grade_hint TEXT NOT NULL DEFAULT 'UNKNOWN',
+      timestamp         INTEGER NOT NULL,
+      sync_status       INTEGER NOT NULL DEFAULT 0,
 
-    // Index speeds up the sync worker's pending-query on large local queues.
-    await db.execute('''
-      CREATE INDEX IF NOT EXISTS idx_sync_status
-        ON $_kTable (sync_status);
-    ''');
-  }
+      farmer_id         TEXT,
+      commodity         TEXT,
+      gross_weight_kg   REAL,
+      bag_count         INTEGER,
+      tare_weight_kg    REAL,
+      net_weight_kg     REAL,
+      moisture_percent  REAL,
+      verified_grade    TEXT
+    );
+  ''');
+}
 
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Migration stubs – extend per version bump.
-    if (oldVersion < 2) {
-      // e.g. ALTER TABLE micro_lots ADD COLUMN crop_type TEXT DEFAULT 'rice';
-    }
+Future<void> _onUpgrade(
+    Database db, int oldVersion, int newVersion) async {
+  if (oldVersion < 3) {
+    await db.execute(
+      'ALTER TABLE $_kTable ADD COLUMN farmer_id TEXT NOT NULL DEFAULT ""',
+    );
+
+    await db.execute(
+      'ALTER TABLE $_kTable ADD COLUMN commodity TEXT NOT NULL DEFAULT "UNKNOWN"',
+    );
+
+    await db.execute(
+      'ALTER TABLE $_kTable ADD COLUMN gross_weight_kg REAL NOT NULL DEFAULT 0',
+    );
+
+    await db.execute(
+      'ALTER TABLE $_kTable ADD COLUMN bag_count INTEGER NOT NULL DEFAULT 0',
+    );
+
+    await db.execute(
+      'ALTER TABLE $_kTable ADD COLUMN tare_weight_kg REAL NOT NULL DEFAULT 0',
+    );
+
+    await db.execute(
+      'ALTER TABLE $_kTable ADD COLUMN net_weight_kg REAL NOT NULL DEFAULT 0',
+    );
+
+    await db.execute(
+      'ALTER TABLE $_kTable ADD COLUMN moisture_percent REAL NOT NULL DEFAULT 0',
+    );
+
+    await db.execute(
+      'ALTER TABLE $_kTable ADD COLUMN verified_grade TEXT',
+    );
   }
+}
 
   // ── CRUD ──────────────────────────────────────────────────────────────────
 
@@ -146,6 +236,23 @@ class DatabaseHelper {
       return [];
     }
   }
+  /// Fetch all lots, newest first.
+/// Used by the local lot history screen.
+Future<List<MicroLot>> getAllLots() async {
+  try {
+    final db = await _database;
+
+    final rows = await db.query(
+      _kTable,
+      orderBy: 'timestamp DESC',
+    );
+
+    return rows.map(MicroLot.fromMap).toList();
+  } on DatabaseException catch (e) {
+    _log('getAllLots error: $e');
+    return [];
+  }
+}
 
   /// Atomically update [syncStatus] for a given [id].
   Future<void> updateSyncStatus(String id, SyncStatus status) async {
@@ -198,10 +305,26 @@ class DatabaseHelper {
   }
 
   Future<void> close() async => (await _database).close();
+Future<void> testDatabase() async {
+  final lots = await getPendingLots();
 
+  print('========== DATABASE TEST ==========');
+  print('Number of pending lots: ${lots.length}');
+
+  for (final lot in lots) {
+    print('Lot ID: ${lot.id}');
+    print('Farmer: ${lot.farmerId}');
+    print('Commodity: ${lot.commodity}');
+    print('Net Weight: ${lot.netWeightKg}');
+    print('Moisture: ${lot.moisturePercent}');
+    print('Status: ${lot.syncStatus}');
+    print('==================================');
+  }
+}
   void _log(String msg) {
     // Replace with your preferred logging solution (e.g. logger package).
     // ignore: avoid_print
     print('[DatabaseHelper] $msg');
   }
+
 }
